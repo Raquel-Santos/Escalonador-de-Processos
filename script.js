@@ -1,49 +1,104 @@
-const processQueue = [];
-let physicalMemoryUsage = 0;
-let virtualMemoryUsage = 0;
-const physicalMemoryLimit = 512; // 512 MB
-const virtualMemoryLimit = 1024; // 1024 MB
+const filaDeProcessos = [];
+let usoMemoriaFisica = 0;
+let usoMemoriaVirtual = 0;
+const limiteMemoriaFisica = 512; // 512 MB
+const limiteMemoriaVirtual = 1024; // 1024 MB
+const intervaloExecucao = 100; // Atualização em milissegundos
 
-document.getElementById("processForm").addEventListener("submit", (e) => {
+// Evento para adicionar um novo processo
+document.getElementById("formularioProcesso").addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const processName = document.getElementById("processName").value;
-    const memoryUsage = parseInt(document.getElementById("memoryUsage").value, 10);
+    const nomeProcesso = document.getElementById("nomeProcesso").value;
+    const memoriaUso = parseInt(document.getElementById("usoMemoria").value, 10);
 
-    if (memoryUsage > 0) {
-        processQueue.push({ name: processName, memory: memoryUsage });
-        updateQueue();
-        allocateMemory(memoryUsage);
+    if (memoriaUso > 0) {
+        filaDeProcessos.push({
+            nome: nomeProcesso,
+            memoria: memoriaUso,
+            tempoExecucao: 0,
+            tempoEspera: 0,
+            progresso: 0
+        });
+        atualizarFila();
+        alocarMemoria(memoriaUso);
+        atualizarExecucao();
     }
 
-    document.getElementById("processForm").reset();
+    document.getElementById("formularioProcesso").reset();
 });
 
-function updateQueue() {
-    const queueElement = document.getElementById("processQueue");
-    queueElement.innerHTML = "";
+// Atualiza a lista de processos na fila
+function atualizarFila() {
+    const elementoFila = document.getElementById("filaProcessos");
+    elementoFila.innerHTML = "";
 
-    processQueue.forEach((process, index) => {
+    filaDeProcessos.forEach((processo, index) => {
         const li = document.createElement("li");
-        li.textContent = `${index + 1}. ${process.name} (${process.memory} MB)`;
-        queueElement.appendChild(li);
+        li.textContent = `${index + 1}. ${processo.nome} (${processo.memoria} MB)`;
+        elementoFila.appendChild(li);
     });
 }
 
-function allocateMemory(memoryUsage) {
-    if (physicalMemoryUsage + memoryUsage <= physicalMemoryLimit) {
-        physicalMemoryUsage += memoryUsage;
-    } else if (virtualMemoryUsage + memoryUsage <= virtualMemoryLimit) {
-        virtualMemoryUsage += memoryUsage;
+// Aloca memória física ou virtual para o processo
+function alocarMemoria(memoriaUso) {
+    if (usoMemoriaFisica + memoriaUso <= limiteMemoriaFisica) {
+        usoMemoriaFisica += memoriaUso;
+    } else if (usoMemoriaVirtual + memoriaUso <= limiteMemoriaVirtual) {
+        usoMemoriaVirtual += memoriaUso;
     } else {
         alert("Memória insuficiente para adicionar este processo!");
-        processQueue.pop(); // Remove o processo da fila
+        filaDeProcessos.pop(); // Remove o processo da fila
     }
 
-    updateMemoryDisplay();
+    atualizarMemoria();
 }
 
-function updateMemoryDisplay() {
-    document.getElementById("physicalMemory").textContent = `${physicalMemoryUsage} / ${physicalMemoryLimit} MB`;
-    document.getElementById("virtualMemory").textContent = `${virtualMemoryUsage} / ${virtualMemoryLimit} MB`;
+// Atualiza os valores exibidos de memória
+function atualizarMemoria() {
+    document.getElementById("memoriaFisica").textContent = `${usoMemoriaFisica} / ${limiteMemoriaFisica} MB`;
+    document.getElementById("memoriaVirtual").textContent = `${usoMemoriaVirtual} / ${limiteMemoriaVirtual} MB`;
+}
+
+// Atualiza a execução dos processos
+function atualizarExecucao() {
+    const areaExecucao = document.getElementById("areaExecucao");
+    areaExecucao.innerHTML = "";
+
+    filaDeProcessos.forEach((processo, index) => {
+        processo.tempoEspera += intervaloExecucao / 1000; // Incrementa o tempo de espera
+
+        if (index === 0) { // Somente o primeiro processo está sendo executado
+            processo.tempoExecucao += intervaloExecucao / 1000;
+            processo.progresso = Math.min(100, processo.tempoExecucao * 10); // Incrementa 10% por segundo
+            if (processo.progresso >= 100) {
+                filaDeProcessos.shift(); // Remove o processo quando concluído
+            }
+        }
+
+        // Cria o elemento visual para exibir a barra de progresso e informações
+        const elementoProcesso = document.createElement("div");
+        elementoProcesso.className = "processo";
+
+        const contenedorBarraProgresso = document.createElement("div");
+        contenedorBarraProgresso.className = "barra-progresso-contenedor";
+
+        const barraProgresso = document.createElement("div");
+        barraProgresso.className = "barra-progresso";
+        barraProgresso.style.width = `${processo.progresso}%`;
+
+        const informacoesProcesso = document.createElement("div");
+        informacoesProcesso.className = "informacoes-processo";
+        informacoesProcesso.textContent = `Processo: ${processo.nome} | Execução: ${processo.tempoExecucao.toFixed(1)}s | Espera: ${processo.tempoEspera.toFixed(1)}s`;
+
+        contenedorBarraProgresso.appendChild(barraProgresso);
+        elementoProcesso.appendChild(contenedorBarraProgresso);
+        elementoProcesso.appendChild(informacoesProcesso);
+        areaExecucao.appendChild(elementoProcesso);
+    });
+
+    // Continua a execução enquanto houver processos na fila
+    if (filaDeProcessos.length > 0) {
+        setTimeout(atualizarExecucao, intervaloExecucao);
+    }
 }
