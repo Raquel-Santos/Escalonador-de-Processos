@@ -68,3 +68,32 @@ form button:hover {
     border: 1px solid #ddd;
     border-radius: 4px;
 }
+
+.process {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.progress-bar-container {
+    position: relative;
+    height: 20px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    position: absolute;
+    height: 100%;
+    background: #28a745;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.process-info {
+    margin-top: 5px;
+    font-size: 0.9em;
+}
