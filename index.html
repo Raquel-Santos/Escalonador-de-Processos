@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escalonador FIFO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Escalonador de Processos FIFO</h1>
+        <form id="processForm">
+            <label for="processName">Nome do Processo:</label>
+            <input type="text" id="processName" required>
+            
+            <label for="memoryUsage">Memória Necessária (MB):</label>
+            <input type="number" id="memoryUsage" required>
+            
+            <button type="submit">Adicionar Processo</button>
+        </form>
+
+        <div class="queues">
+            <div class="queue">
+                <h2>Fila de Processos</h2>
+                <ul id="processQueue"></ul>
+            </div>
+            <div class="queue">
+                <h2>Memória</h2>
+                <p><strong>Memória Física:</strong> <span id="physicalMemory">0 / 512 MB</span></p>
+                <p><strong>Memória Virtual:</strong> <span id="virtualMemory">0 / 1024 MB</span></p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
