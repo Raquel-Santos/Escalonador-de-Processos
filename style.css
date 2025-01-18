@@ -8,7 +8,7 @@ h1, h2 {
     color: #333;
 }
 
-.formulario {
+form {
     margin-bottom: 20px;
 }
 
@@ -81,3 +81,4 @@ li {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
