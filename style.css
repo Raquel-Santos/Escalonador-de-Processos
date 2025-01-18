@@ -42,10 +42,12 @@ button:hover {
 
 #graficoGantt {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     border: 1px solid #ccc;
     border-radius: 5px;
     overflow: hidden;
+    position: relative;
+    height: 50px; /* Altura ajustada para visualização */
 }
 
 .barra-processo {
@@ -54,6 +56,8 @@ button:hover {
     padding: 5px;
     font-size: 0.8em;
     flex-shrink: 0;
+    transition: transform 1s ease-out; /* Transição suave para o movimento da barra */
+    display: inline-block;
 }
 
 #escalaDeTempo {
@@ -82,5 +86,16 @@ button:hover {
     color: white;
 }
 
+#detalhesProcessos td {
+    font-size: 0.9em;
+}
 
+/* Estilo para o botão "Voltar" */
+button#voltar {
+    background-color: #f44336; /* Cor vermelha */
+    margin-top: 20px;
+}
 
+button#voltar:hover {
+    background-color: #e53935; /* Cor de hover */
+}
