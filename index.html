@@ -3,37 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escalonador FIFO</title>
+    <title>Escalonador FIFO com Gantt</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Escalonador FIFO</h1>
+    <h1>Escalonador FIFO com Gráfico de Gantt</h1>
     <form id="formularioProcesso">
         <div class="grupo-formulario">
             <label for="nomeProcesso">Nome do Processo:</label>
             <input type="text" id="nomeProcesso" placeholder="Exemplo: Processo 1" required>
         </div>
         <div class="grupo-formulario">
-            <label for="usoMemoria">Uso de Memória (MB):</label>
-            <input type="number" id="usoMemoria" min="1" placeholder="Exemplo: 128" required>
+            <label for="tempoExecucao">Tempo de Execução (segundos):</label>
+            <input type="number" id="tempoExecucao" min="1" placeholder="Exemplo: 5" required>
         </div>
         <button type="submit">Adicionar Processo</button>
     </form>
-
-    <div class="memoria">
-        <h2>Memória</h2>
-        <p>Memória Física: <span id="memoriaFisica">0 / 512 MB</span></p>
-        <p>Memória Virtual: <span id="memoriaVirtual">0 / 1024 MB</span></p>
-    </div>
 
     <div class="fila">
         <h2>Fila de Processos</h2>
         <ul id="filaProcessos"></ul>
     </div>
 
-    <div class="fila">
-        <h2>Execução dos Processos</h2>
-        <div id="areaExecucao"></div>
+    <div class="gantt">
+        <h2>Gráfico de Gantt</h2>
+        <div id="graficoGantt"></div>
     </div>
 
     <script src="script.js"></script>
