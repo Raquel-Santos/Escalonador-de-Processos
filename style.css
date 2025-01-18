@@ -1,99 +1,83 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    background-color: #f4f4f9;
 }
 
 h1, h2 {
-    text-align: center;
-    color: #444;
+    color: #333;
 }
 
-form {
+.formulario {
     margin-bottom: 20px;
 }
 
-form label {
-    display: block;
-    margin: 10px 0 5px;
+.grupo-formulario {
+    margin-bottom: 15px;
 }
 
-form input, form button {
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-form button {
-    background-color: #28a745;
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
     color: white;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
 }
 
-form button:hover {
-    background-color: #218838;
+button:hover {
+    background-color: #0056b3;
 }
 
-.queues {
-    display: flex;
-    justify-content: space-between;
+.fila {
+    margin-top: 20px;
 }
 
-.queue {
-    width: 48%;
-}
-
-.queue ul {
-    list-style: none;
+ul {
+    list-style-type: none;
     padding: 0;
 }
 
-.queue ul li {
-    background: #f8f9fa;
+li {
     margin: 5px 0;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.process {
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
     background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
-.progress-bar-container {
-    position: relative;
-    height: 20px;
-    background: #ddd;
-    border-radius: 10px;
+.gantt {
+    margin-top: 20px;
+}
+
+#graficoGantt {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     overflow: hidden;
 }
 
-.progress-bar {
-    position: absolute;
-    height: 100%;
-    background: #28a745;
-    width: 0%;
-    transition: width 0.1s linear;
-}
-
-.process-info {
-    margin-top: 5px;
-    font-size: 0.9em;
+.barra-processo {
+    height: 30px;
+    color: white;
+    text-align: center;
+    line-height: 30px;
+    margin-right: 2px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
