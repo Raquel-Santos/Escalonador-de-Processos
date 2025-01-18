@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const pagina = document.body.id;
 
     if (pagina === "pagina-index") {
-        // Lógica para index.html (escolha da quantidade de processos)
+        // Página inicial: Escolher a quantidade de processos
         document.getElementById("formQuantidade").addEventListener("submit", (e) => {
             const quantidade = document.getElementById("quantidadeProcessos").value;
             sessionStorage.setItem("quantidadeProcessos", quantidade); // Salva no sessionStorage
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (pagina === "pagina-config") {
-        // Lógica para config.html (formulário dinâmico)
+        // Página de configuração dos processos
         const quantidade = parseInt(sessionStorage.getItem("quantidadeProcessos"), 10);
         const processosContainer = document.getElementById("processosContainer");
 
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (pagina === "pagina-gantt") {
-        // Lógica para gantt.html (gráfico de Gantt)
+        // Página do gráfico de Gantt
         const execucao = JSON.parse(sessionStorage.getItem("execucao"));
         const espera = JSON.parse(sessionStorage.getItem("espera"));
 
