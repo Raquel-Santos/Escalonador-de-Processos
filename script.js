@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const pagina = document.body.id;
 
     if (pagina === "pagina-index") {
-        // Página inicial
         document.getElementById("formQuantidade").addEventListener("submit", (e) => {
             const quantidade = document.getElementById("quantidadeProcessos").value;
             sessionStorage.setItem("quantidadeProcessos", quantidade);
@@ -25,14 +24,32 @@ document.addEventListener("DOMContentLoaded", () => {
             processosContainer.appendChild(div);
         }
 
+        document.getElementById("formProcessos").addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const execucao = [...document.querySelectorAll('input[name="tempoExecucao[]"]')].map(input => input.value);
+            const espera = [...document.querySelectorAll('input[name="tempoEspera[]"]')].map(input => input.value);
+
+            sessionStorage.setItem("execucao", JSON.stringify(execucao));
+            sessionStorage.setItem("espera", JSON.stringify(espera));
+
+            window.location.href = "gantt.html";
+        });
+
         document.getElementById("voltar").addEventListener("click", () => {
             window.location.href = "index.html";
         });
     }
 
     if (pagina === "pagina-gantt") {
-        const execucao = JSON.parse(sessionStorage.getItem("execucao"));
-        const espera = JSON.parse(sessionStorage.getItem("espera"));
+        const execucao = JSON.parse(sessionStorage.getItem("execucao")) || [];
+        const espera = JSON.parse(sessionStorage.getItem("espera")) || [];
+
+        if (execucao.length === 0 || espera.length === 0) {
+            alert("Dados dos processos não encontrados. Retornando à página inicial.");
+            window.location.href = "index.html";
+            return;
+        }
 
         const filaDeProcessos = execucao.map((tempoExecucao, i) => ({
             nome: `P${i + 1}`,
@@ -44,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let tempoAtual = 0;
         const graficoGantt = document.getElementById("graficoGantt");
+        const escalaDeTempo = document.getElementById("escalaDeTempo");
         const tabela = document.querySelector("#detalhesProcessos tbody");
 
         filaDeProcessos.forEach((processo, i) => {
@@ -51,7 +69,6 @@ document.addEventListener("DOMContentLoaded", () => {
             processo.tempoFim = tempoAtual + processo.tempoExecucao;
             processo.turnaround = processo.tempoExecucao + processo.tempoEspera;
 
-            // Atualizar gráfico de Gantt
             const barra = document.createElement("div");
             barra.className = "barra-processo";
             barra.style.width = `${processo.tempoExecucao * 50}px`;
@@ -59,7 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
             barra.textContent = processo.nome;
             graficoGantt.appendChild(barra);
 
-            // Atualizar tabela
+            const marcador = document.createElement("div");
+            marcador.textContent = processo.tempoFim;
+            marcador.style.flex = "1";
+            escalaDeTempo.appendChild(marcador);
+
             const linha = document.createElement("tr");
             linha.innerHTML = `
                 <td>${processo.nome}</td>
