@@ -1,29 +1,23 @@
 const filaDeProcessos = [];
-let usoMemoriaFisica = 0;
-let usoMemoriaVirtual = 0;
-const limiteMemoriaFisica = 512; // 512 MB
-const limiteMemoriaVirtual = 1024; // 1024 MB
-const intervaloExecucao = 100; // Atualização em milissegundos
+let tempoAtual = 0;
 
-// Evento para adicionar um novo processo
+// Adiciona um novo processo
 document.getElementById("formularioProcesso").addEventListener("submit", (e) => {
     e.preventDefault();
 
     const nomeProcesso = document.getElementById("nomeProcesso").value;
-    const memoriaUso = parseInt(document.getElementById("usoMemoria").value, 10);
+    const tempoExecucao = parseInt(document.getElementById("tempoExecucao").value, 10);
 
-    if (memoriaUso > 0) {
-        filaDeProcessos.push({
-            nome: nomeProcesso,
-            memoria: memoriaUso,
-            tempoExecucao: 0,
-            tempoEspera: 0,
-            progresso: 0
-        });
-        atualizarFila();
-        alocarMemoria(memoriaUso);
-        atualizarExecucao();
-    }
+    const processo = {
+        nome: nomeProcesso,
+        tempoExecucao: tempoExecucao,
+        tempoInicio: null,
+        tempoFim: null,
+    };
+
+    filaDeProcessos.push(processo);
+    atualizarFila();
+    processarFila();
 
     document.getElementById("formularioProcesso").reset();
 });
@@ -35,70 +29,50 @@ function atualizarFila() {
 
     filaDeProcessos.forEach((processo, index) => {
         const li = document.createElement("li");
-        li.textContent = `${index + 1}. ${processo.nome} (${processo.memoria} MB)`;
+        li.textContent = `${index + 1}. ${processo.nome} - ${processo.tempoExecucao}s`;
         elementoFila.appendChild(li);
     });
 }
 
-// Aloca memória física ou virtual para o processo
-function alocarMemoria(memoriaUso) {
-    if (usoMemoriaFisica + memoriaUso <= limiteMemoriaFisica) {
-        usoMemoriaFisica += memoriaUso;
-    } else if (usoMemoriaVirtual + memoriaUso <= limiteMemoriaVirtual) {
-        usoMemoriaVirtual += memoriaUso;
-    } else {
-        alert("Memória insuficiente para adicionar este processo!");
-        filaDeProcessos.pop(); // Remove o processo da fila
-    }
+// Processa a fila de processos
+function processarFila() {
+    if (filaDeProcessos.length === 0) return;
 
-    atualizarMemoria();
-}
+    const processo = filaDeProcessos.shift();
+    processo.tempoInicio = tempoAtual;
+    processo.tempoFim = tempoAtual + processo.tempoExecucao;
 
-// Atualiza os valores exibidos de memória
-function atualizarMemoria() {
-    document.getElementById("memoriaFisica").textContent = `${usoMemoriaFisica} / ${limiteMemoriaFisica} MB`;
-    document.getElementById("memoriaVirtual").textContent = `${usoMemoriaVirtual} / ${limiteMemoriaVirtual} MB`;
-}
+    atualizarGantt(processo);
 
-// Atualiza a execução dos processos
-function atualizarExecucao() {
-    const areaExecucao = document.getElementById("areaExecucao");
-    areaExecucao.innerHTML = "";
+    const intervalo = setInterval(() => {
+        tempoAtual++;
 
-    filaDeProcessos.forEach((processo, index) => {
-        processo.tempoEspera += intervaloExecucao / 1000; // Incrementa o tempo de espera
-
-        if (index === 0) { // Somente o primeiro processo está sendo executado
-            processo.tempoExecucao += intervaloExecucao / 1000;
-            processo.progresso = Math.min(100, processo.tempoExecucao * 10); // Incrementa 10% por segundo
-            if (processo.progresso >= 100) {
-                filaDeProcessos.shift(); // Remove o processo quando concluído
-            }
+        if (tempoAtual >= processo.tempoFim) {
+            clearInterval(intervalo);
+            processarFila();
         }
+    }, 1000);
+}
 
-        // Cria o elemento visual para exibir a barra de progresso e informações
-        const elementoProcesso = document.createElement("div");
-        elementoProcesso.className = "processo";
+// Atualiza o gráfico de Gantt
+function atualizarGantt(processo) {
+    const graficoGantt = document.getElementById("graficoGantt");
+    const barra = document.createElement("div");
 
-        const contenedorBarraProgresso = document.createElement("div");
-        contenedorBarraProgresso.className = "barra-progresso-contenedor";
+    barra.className = "barra-processo";
+    barra.style.width = `${processo.tempoExecucao * 50}px`; // Largura proporcional ao tempo
+    barra.style.backgroundColor = gerarCorAleatoria();
+    barra.textContent = processo.nome;
 
-        const barraProgresso = document.createElement("div");
-        barraProgresso.className = "barra-progresso";
-        barraProgresso.style.width = `${processo.progresso}%`;
+    graficoGantt.appendChild(barra);
+}
 
-        const informacoesProcesso = document.createElement("div");
-        informacoesProcesso.className = "informacoes-processo";
-        informacoesProcesso.textContent = `Processo: ${processo.nome} | Execução: ${processo.tempoExecucao.toFixed(1)}s | Espera: ${processo.tempoEspera.toFixed(1)}s`;
-
-        contenedorBarraProgresso.appendChild(barraProgresso);
-        elementoProcesso.appendChild(contenedorBarraProgresso);
-        elementoProcesso.appendChild(informacoesProcesso);
-        areaExecucao.appendChild(elementoProcesso);
-    });
-
-    // Continua a execução enquanto houver processos na fila
-    if (filaDeProcessos.length > 0) {
-        setTimeout(atualizarExecucao, intervaloExecucao);
+// Gera uma cor aleatória para cada processo
+function gerarCorAleatoria() {
+    const letras = "0123456789ABCDEF";
+    let cor = "#";
+    for (let i = 0; i < 6; i++) {
+        cor += letras[Math.floor(Math.random() * 16)];
     }
+    return cor;
 }
