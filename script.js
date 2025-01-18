@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const quantidade = parseInt(sessionStorage.getItem("quantidadeProcessos"), 10);
         const processosContainer = document.getElementById("processosContainer");
 
+        // Limpar os campos de entrada dos processos anteriores
+        processosContainer.innerHTML = '';
+
         for (let i = 0; i < quantidade; i++) {
             const div = document.createElement("div");
             div.innerHTML = `
@@ -92,23 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             tempoAtual += processo.tempoExecucao;
         });
-
-        let tempoDecorrido = 0;
-        const intervalo = setInterval(() => {
-            if (tempoDecorrido >= tempoAtual) {
-                clearInterval(intervalo);
-                return;
-            }
-
-            filaDeProcessos.forEach((processo, i) => {
-                if (tempoDecorrido >= processo.tempoInicio && tempoDecorrido <= processo.tempoFim) {
-                    const barra = graficoGantt.children[i];
-                    barra.style.transform = `translateX(${(tempoDecorrido - processo.tempoInicio) * 50}px)`;
-                }
-            });
-
-            tempoDecorrido += 1;
-        }, 1000);
 
         document.getElementById("voltar").addEventListener("click", () => {
             window.location.href = "config.html";
