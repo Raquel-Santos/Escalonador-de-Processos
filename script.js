@@ -93,6 +93,23 @@ document.addEventListener("DOMContentLoaded", () => {
             tempoAtual += processo.tempoExecucao;
         });
 
+        let tempoDecorrido = 0;
+        const intervalo = setInterval(() => {
+            if (tempoDecorrido >= tempoAtual) {
+                clearInterval(intervalo);
+                return;
+            }
+
+            filaDeProcessos.forEach((processo, i) => {
+                if (tempoDecorrido >= processo.tempoInicio && tempoDecorrido <= processo.tempoFim) {
+                    const barra = graficoGantt.children[i];
+                    barra.style.transform = `translateX(${(tempoDecorrido - processo.tempoInicio) * 50}px)`;
+                }
+            });
+
+            tempoDecorrido += 1;
+        }, 1000);
+
         document.getElementById("voltar").addEventListener("click", () => {
             window.location.href = "config.html";
         });
@@ -101,10 +118,4 @@ document.addEventListener("DOMContentLoaded", () => {
     function gerarCorAleatoria() {
         const letras = "0123456789ABCDEF";
         let cor = "#";
-        for (let i = 0; i < 6; i++) {
-            cor += letras[Math.floor(Math.random() * 16)];
-        }
-        return cor;
-    }
-});
-
+        for
