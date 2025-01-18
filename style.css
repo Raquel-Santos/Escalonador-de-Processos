@@ -1,15 +1,43 @@
-/* Escala de Tempo */
-#escalaDeTempo {
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+form {
+    margin: 20px auto;
+    width: 300px;
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 0.8em;
-    color: #666;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input, button {
+    padding: 10px;
+    font-size: 1em;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
 }
 
 #graficoContainer {
     width: 90%;
     max-width: 800px;
+    margin: 20px auto;
 }
 
 #graficoGantt {
@@ -28,12 +56,19 @@
     flex-shrink: 0;
 }
 
-/* Tabela */
+#escalaDeTempo {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.8em;
+    color: #666;
+}
+
 #detalhesProcessos {
     border-collapse: collapse;
     width: 90%;
     max-width: 800px;
-    margin-top: 20px;
+    margin: 20px auto;
 }
 
 #detalhesProcessos th, #detalhesProcessos td {
@@ -46,5 +81,6 @@
     background-color: #4CAF50;
     color: white;
 }
+
 
 
