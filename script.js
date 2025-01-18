@@ -1,41 +1,38 @@
-const filaDeProcessos = [];
+let filaDeProcessos = [];
 let tempoAtual = 0;
 
-// Adiciona um novo processo
-document.getElementById("formularioProcesso").addEventListener("submit", (e) => {
+// Evento de configuração da simulação
+document.getElementById("menuConfiguracao").addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const nomeProcesso = document.getElementById("nomeProcesso").value;
+    const quantidadeProcessos = parseInt(document.getElementById("quantidadeProcessos").value, 10);
     const tempoExecucao = parseInt(document.getElementById("tempoExecucao").value, 10);
+    const tempoEspera = parseInt(document.getElementById("tempoEspera").value, 10);
 
-    const processo = {
-        nome: nomeProcesso,
-        tempoExecucao: tempoExecucao,
-        tempoInicio: null,
-        tempoFim: null,
-    };
-
-    filaDeProcessos.push(processo);
-    atualizarFila();
-    processarFila();
-
-    document.getElementById("formularioProcesso").reset();
+    iniciarSimulacao(quantidadeProcessos, tempoExecucao, tempoEspera);
 });
 
-// Atualiza a lista de processos na fila
-function atualizarFila() {
-    const elementoFila = document.getElementById("filaProcessos");
-    elementoFila.innerHTML = "";
+// Inicia a simulação com os parâmetros configurados
+function iniciarSimulacao(quantidadeProcessos, tempoExecucao, tempoEspera) {
+    filaDeProcessos = [];
+    tempoAtual = 0;
+    document.getElementById("filaProcessos").innerHTML = "";
+    document.getElementById("graficoGantt").innerHTML = "";
 
-    filaDeProcessos.forEach((processo, index) => {
-        const li = document.createElement("li");
-        li.textContent = `${index + 1}. ${processo.nome} - ${processo.tempoExecucao}s`;
-        elementoFila.appendChild(li);
-    });
+    for (let i = 0; i < quantidadeProcessos; i++) {
+        filaDeProcessos.push({
+            nome: `P${i + 1}`,
+            tempoExecucao: tempoExecucao,
+            tempoInicio: null,
+            tempoFim: null,
+        });
+    }
+
+    processarFila(tempoEspera);
 }
 
 // Processa a fila de processos
-function processarFila() {
+function processarFila(tempoEspera) {
     if (filaDeProcessos.length === 0) return;
 
     const processo = filaDeProcessos.shift();
@@ -49,7 +46,7 @@ function processarFila() {
 
         if (tempoAtual >= processo.tempoFim) {
             clearInterval(intervalo);
-            processarFila();
+            setTimeout(() => processarFila(tempoEspera * 1000), tempoEspera * 1000);
         }
     }, 1000);
 }
