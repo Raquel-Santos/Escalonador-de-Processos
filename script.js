@@ -12,9 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const quantidade = parseInt(sessionStorage.getItem("quantidadeProcessos"), 10);
         const processosContainer = document.getElementById("processosContainer");
 
-        // Limpar os campos de entrada dos processos anteriores
-        processosContainer.innerHTML = '';
-
         for (let i = 0; i < quantidade; i++) {
             const div = document.createElement("div");
             div.innerHTML = `
@@ -110,4 +107,3 @@ document.addEventListener("DOMContentLoaded", () => {
         return cor;
     }
 });
-
