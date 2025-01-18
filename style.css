@@ -1,72 +1,50 @@
-/* Estilo global */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+/* Escala de Tempo */
+#escalaDeTempo {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #f4f4f9;
-    color: #333;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.8em;
+    color: #666;
 }
 
-/* Cabeçalhos */
-h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
+#graficoContainer {
+    width: 90%;
+    max-width: 800px;
 }
 
-/* Formulários */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 300px;
-}
-
-label {
-    font-weight: bold;
-}
-
-input, button {
-    padding: 10px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    border: none;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-/* Gráfico de Gantt */
 #graficoGantt {
     display: flex;
     align-items: center;
-    margin-top: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     overflow: hidden;
-    width: 90%;
-    max-width: 800px;
 }
 
 .barra-processo {
     text-align: center;
     color: white;
     padding: 5px;
-    margin: 2px;
-    border-radius: 3px;
     font-size: 0.8em;
     flex-shrink: 0;
 }
+
+/* Tabela */
+#detalhesProcessos {
+    border-collapse: collapse;
+    width: 90%;
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+#detalhesProcessos th, #detalhesProcessos td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+#detalhesProcessos th {
+    background-color: #4CAF50;
+    color: white;
+}
+
 
