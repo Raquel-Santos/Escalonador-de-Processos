@@ -2,15 +2,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const pagina = document.body.id;
 
     if (pagina === "pagina-index") {
-        // Página inicial: Escolher a quantidade de processos
+        // Página inicial
         document.getElementById("formQuantidade").addEventListener("submit", (e) => {
             const quantidade = document.getElementById("quantidadeProcessos").value;
-            sessionStorage.setItem("quantidadeProcessos", quantidade); // Salva no sessionStorage
+            sessionStorage.setItem("quantidadeProcessos", quantidade);
         });
     }
 
     if (pagina === "pagina-config") {
-        // Página de configuração dos processos
         const quantidade = parseInt(sessionStorage.getItem("quantidadeProcessos"), 10);
         const processosContainer = document.getElementById("processosContainer");
 
@@ -26,20 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
             processosContainer.appendChild(div);
         }
 
-        document.getElementById("formProcessos").addEventListener("submit", (e) => {
-            e.preventDefault();
-            const execucao = [...document.querySelectorAll('input[name="tempoExecucao[]"]')].map(input => input.value);
-            const espera = [...document.querySelectorAll('input[name="tempoEspera[]"]')].map(input => input.value);
-
-            sessionStorage.setItem("execucao", JSON.stringify(execucao));
-            sessionStorage.setItem("espera", JSON.stringify(espera));
-
-            window.location.href = "gantt.html";
+        document.getElementById("voltar").addEventListener("click", () => {
+            window.location.href = "index.html";
         });
     }
 
     if (pagina === "pagina-gantt") {
-        // Página do gráfico de Gantt
         const execucao = JSON.parse(sessionStorage.getItem("execucao"));
         const espera = JSON.parse(sessionStorage.getItem("espera"));
 
@@ -52,46 +43,47 @@ document.addEventListener("DOMContentLoaded", () => {
         }));
 
         let tempoAtual = 0;
+        const graficoGantt = document.getElementById("graficoGantt");
+        const tabela = document.querySelector("#detalhesProcessos tbody");
 
-        function atualizarGantt(processo) {
-            const graficoGantt = document.getElementById("graficoGantt");
+        filaDeProcessos.forEach((processo, i) => {
+            processo.tempoInicio = tempoAtual;
+            processo.tempoFim = tempoAtual + processo.tempoExecucao;
+            processo.turnaround = processo.tempoExecucao + processo.tempoEspera;
+
+            // Atualizar gráfico de Gantt
             const barra = document.createElement("div");
-
             barra.className = "barra-processo";
             barra.style.width = `${processo.tempoExecucao * 50}px`;
             barra.style.backgroundColor = gerarCorAleatoria();
             barra.textContent = processo.nome;
-
             graficoGantt.appendChild(barra);
+
+            // Atualizar tabela
+            const linha = document.createElement("tr");
+            linha.innerHTML = `
+                <td>${processo.nome}</td>
+                <td>${processo.tempoExecucao}</td>
+                <td>${processo.tempoEspera}</td>
+                <td>${processo.turnaround}</td>
+            `;
+            tabela.appendChild(linha);
+
+            tempoAtual += processo.tempoExecucao;
+        });
+
+        document.getElementById("voltar").addEventListener("click", () => {
+            window.location.href = "config.html";
+        });
+    }
+
+    function gerarCorAleatoria() {
+        const letras = "0123456789ABCDEF";
+        let cor = "#";
+        for (let i = 0; i < 6; i++) {
+            cor += letras[Math.floor(Math.random() * 16)];
         }
-
-        function gerarCorAleatoria() {
-            const letras = "0123456789ABCDEF";
-            let cor = "#";
-            for (let i = 0; i < 6; i++) {
-                cor += letras[Math.floor(Math.random() * 16)];
-            }
-            return cor;
-        }
-
-        function processarFila() {
-            if (filaDeProcessos.length === 0) return;
-
-            const processo = filaDeProcessos.shift();
-            processo.tempoInicio = tempoAtual;
-            processo.tempoFim = tempoAtual + processo.tempoExecucao;
-
-            atualizarGantt(processo);
-
-            const intervalo = setInterval(() => {
-                tempoAtual++;
-                if (tempoAtual >= processo.tempoFim) {
-                    clearInterval(intervalo);
-                    setTimeout(processarFila, processo.tempoEspera * 1000);
-                }
-            }, 1000);
-        }
-
-        processarFila();
+        return cor;
     }
 });
+
