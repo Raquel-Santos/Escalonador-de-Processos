@@ -1,84 +1,23 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-    padding: 0;
     text-align: center;
-}
-
-h1 {
-    color: #333;
-}
-
-form {
-    margin: 20px auto;
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-input, button {
-    padding: 10px;
-    font-size: 1em;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-#graficoContainer {
-    width: 90%;
-    max-width: 800px;
-    margin: 20px auto;
 }
 
 #graficoGantt {
     display: flex;
+    justify-content: center;
     align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    overflow: hidden;
+    margin: 20px auto;
+    border: 1px solid black;
+    height: 50px;
 }
 
 .barra-processo {
+    height: 100%;
     text-align: center;
     color: white;
-    padding: 5px;
-    font-size: 0.8em;
-    flex-shrink: 0;
-}
-
-#escalaDeTempo {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 0.8em;
-    color: #666;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid black;
 }
-
-#detalhesProcessos {
-    border-collapse: collapse;
-    width: 90%;
-    max-width: 800px;
-    margin: 20px auto;
-}
-
-#detalhesProcessos th, #detalhesProcessos td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-#detalhesProcessos th {
-    background-color: #4CAF50;
-    color: white;
-}
-
