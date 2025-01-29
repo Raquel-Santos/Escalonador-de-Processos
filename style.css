@@ -1,3 +1,4 @@
+/* Arquivo: styles.css */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -5,19 +6,16 @@ body {
 
 #graficoGantt {
     display: flex;
+    gap: 5px;
     justify-content: center;
-    align-items: center;
-    margin: 20px auto;
-    border: 1px solid black;
-    height: 50px;
+    margin-top: 20px;
 }
 
 .barra-processo {
-    height: 100%;
-    text-align: center;
+    height: 30px;
+    background-color: blue;
     color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-right: 2px solid black;
+    text-align: center;
+    line-height: 30px;
+    padding: 5px;
 }
