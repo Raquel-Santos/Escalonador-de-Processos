@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gráfico de Gantt - EDF</title>
+    <title>Gráfico de Gantt</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body id="pagina-gantt">
-    <h1>Gráfico de Gantt - EDF</h1>
-    <div id="graficoContainer">
-        <div id="escalaDeTempo"></div>
-        <div id="graficoGantt"></div>
-    </div>
+    <h1>Gráfico de Gantt</h1>
+    <div id="graficoGantt"></div>
+    <div id="escalaDeTempo"></div>
     <h2>Detalhes dos Processos</h2>
     <table id="detalhesProcessos">
         <thead>
             <tr>
                 <th>Processo</th>
                 <th>Tempo de Execução</th>
-                <th>Prazo (Deadline)</th>
+                <th>Deadline</th>
                 <th>Tempo de Espera</th>
                 <th>Turnaround</th>
             </tr>
@@ -26,6 +24,7 @@
         <tbody></tbody>
     </table>
     <button id="voltar">Voltar</button>
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
 </body>
 </html>
+
