@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurar Processos</title>
+    <title>Configuração dos Processos</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body id="pagina-config">
     <h1>Configuração dos Processos</h1>
-    <form id="formProcessos" action="gantt.html" method="POST">
+    <form id="formProcessos">
         <div id="processosContainer"></div>
-        <button type="submit">Iniciar Simulação</button>
+
+        <label for="algoritmo">Escolha o Algoritmo:</label>
+        <select id="algoritmo">
+            <option value="FIFO">FIFO</option>
+            <option value="EDF">EDF</option>
+        </select>
+
+        <button type="submit">Avançar</button>
+        <button type="button" id="voltar">Voltar</button>
     </form>
-    <button id="voltar">Voltar</button>
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
 </body>
 </html>
-
-
-
 
