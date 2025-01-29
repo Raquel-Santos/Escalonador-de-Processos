@@ -1,26 +1,19 @@
+<!-- Arquivo: configurar.html -->
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuração dos Processos</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Configurar Processos</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body id="pagina-config">
-    <h1>Configuração dos Processos</h1>
+    <h1>Configurar Processos</h1>
+    <div id="processosContainer"></div>
     <form id="formProcessos">
-        <div id="processosContainer"></div>
-
-        <label for="algoritmo">Escolha o Algoritmo:</label>
-        <select id="algoritmo">
-            <option value="FIFO">FIFO</option>
-            <option value="EDF">EDF</option>
-        </select>
-
-        <button type="submit">Avançar</button>
-        <button type="button" id="voltar">Voltar</button>
+        <button type="submit">Iniciar Simulação</button>
     </form>
+    <button onclick="window.history.back()">Voltar</button>
     <script src="script.js"></script>
 </body>
 </html>
-
