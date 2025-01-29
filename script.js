@@ -1,75 +1,97 @@
-/* Arquivo: script.js */
 document.addEventListener("DOMContentLoaded", () => {
     const pagina = document.body.id;
+
+    if (pagina === "pagina-index") {
+        // Página inicial: Escolher a quantidade de processos
+        document.getElementById("formQuantidade").addEventListener("submit", (e) => {
+            const quantidade = document.getElementById("quantidadeProcessos").value;
+            sessionStorage.setItem("quantidadeProcessos", quantidade); // Salva no sessionStorage
+        });
+    }
+
     if (pagina === "pagina-config") {
-        configurarProcessos();
-    } else if (pagina === "pagina-gantt") {
-        executarEscalonador();
+        // Página de configuração dos processos
+        const quantidade = parseInt(sessionStorage.getItem("quantidadeProcessos"), 10);
+        const processosContainer = document.getElementById("processosContainer");
+
+        for (let i = 0; i < quantidade; i++) {
+            const div = document.createElement("div");
+            div.innerHTML = `
+                <h3>Processo ${i + 1}</h3>
+                <label>Tempo de Execução:</label>
+                <input type="number" name="tempoExecucao[]" min="1" required>
+                <label>Tempo de Espera:</label>
+                <input type="number" name="tempoEspera[]" min="0" required>
+            `;
+            processosContainer.appendChild(div);
+        }
+
+        document.getElementById("formProcessos").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const execucao = [...document.querySelectorAll('input[name="tempoExecucao[]"]')].map(input => input.value);
+            const espera = [...document.querySelectorAll('input[name="tempoEspera[]"]')].map(input => input.value);
+
+            sessionStorage.setItem("execucao", JSON.stringify(execucao));
+            sessionStorage.setItem("espera", JSON.stringify(espera));
+
+            window.location.href = "gantt.html";
+        });
+    }
+
+    if (pagina === "pagina-gantt") {
+        // Página do gráfico de Gantt
+        const execucao = JSON.parse(sessionStorage.getItem("execucao"));
+        const espera = JSON.parse(sessionStorage.getItem("espera"));
+
+        const filaDeProcessos = execucao.map((tempoExecucao, i) => ({
+            nome: `P${i + 1}`,
+            tempoExecucao: parseInt(tempoExecucao, 10),
+            tempoEspera: parseInt(espera[i], 10),
+            tempoInicio: null,
+            tempoFim: null,
+        }));
+
+        let tempoAtual = 0;
+
+        function atualizarGantt(processo) {
+            const graficoGantt = document.getElementById("graficoGantt");
+            const barra = document.createElement("div");
+
+            barra.className = "barra-processo";
+            barra.style.width = `${processo.tempoExecucao * 50}px`;
+            barra.style.backgroundColor = gerarCorAleatoria();
+            barra.textContent = processo.nome;
+
+            graficoGantt.appendChild(barra);
+        }
+
+        function gerarCorAleatoria() {
+            const letras = "0123456789ABCDEF";
+            let cor = "#";
+            for (let i = 0; i < 6; i++) {
+                cor += letras[Math.floor(Math.random() * 16)];
+            }
+            return cor;
+        }
+
+        function processarFila() {
+            if (filaDeProcessos.length === 0) return;
+
+            const processo = filaDeProcessos.shift();
+            processo.tempoInicio = tempoAtual;
+            processo.tempoFim = tempoAtual + processo.tempoExecucao;
+
+            atualizarGantt(processo);
+
+            const intervalo = setInterval(() => {
+                tempoAtual++;
+                if (tempoAtual >= processo.tempoFim) {
+                    clearInterval(intervalo);
+                    setTimeout(processarFila, processo.tempoEspera * 1000);
+                }
+            }, 1000);
+        }
+
+        processarFila();
     }
 });
-
-function configurarProcessos() {
-    const quantidade = parseInt(sessionStorage.getItem("quantidadeProcessos"), 10);
-    const container = document.getElementById("processosContainer");
-
-    for (let i = 0; i < quantidade; i++) {
-        const div = document.createElement("div");
-        div.innerHTML = `
-            <h3>Processo ${i + 1}</h3>
-            <label>Tempo de Chegada:</label>
-            <input type="number" name="tempoChegada[]" required>
-            <label>Tempo de Execução:</label>
-            <input type="number" name="tempoExecucao[]" required>
-            <label>Deadline:</label>
-            <input type="number" name="deadline[]" required>
-            <label>Quantum (se RR):</label>
-            <input type="number" name="quantum[]" required>
-        `;
-        container.appendChild(div);
-    }
-    document.getElementById("formProcessos").addEventListener("submit", salvarProcessos);
-}
-
-function salvarProcessos(e) {
-    e.preventDefault();
-    sessionStorage.setItem("tempoChegada", JSON.stringify([...document.querySelectorAll('input[name="tempoChegada[]"]')].map(i => i.value)));
-    sessionStorage.setItem("tempoExecucao", JSON.stringify([...document.querySelectorAll('input[name="tempoExecucao[]"]')].map(i => i.value)));
-    sessionStorage.setItem("deadline", JSON.stringify([...document.querySelectorAll('input[name="deadline[]"]')].map(i => i.value)));
-    sessionStorage.setItem("quantum", JSON.stringify([...document.querySelectorAll('input[name="quantum[]"]')].map(i => i.value)));
-    sessionStorage.setItem("algoritmo", document.getElementById("algoritmo").value);
-    window.location.href = "gantt.html";
-}
-
-function executarEscalonador() {
-    const tempoChegada = JSON.parse(sessionStorage.getItem("tempoChegada"));
-    const tempoExecucao = JSON.parse(sessionStorage.getItem("tempoExecucao"));
-    const deadline = JSON.parse(sessionStorage.getItem("deadline"));
-    const quantum = JSON.parse(sessionStorage.getItem("quantum"));
-    const algoritmo = sessionStorage.getItem("algoritmo");
-
-    let processos = tempoExecucao.map((tempoExecucao, i) => ({
-        nome: `P${i + 1}`,
-        tempoChegada: parseInt(tempoChegada[i], 10),
-        tempoExecucao: parseInt(tempoExecucao, 10),
-        deadline: parseInt(deadline[i], 10),
-        quantum: parseInt(quantum[i], 10),
-    }));
-
-    processos.sort((a, b) => a.tempoChegada - b.tempoChegada);
-
-    let tempoAtual = 0;
-    processos.forEach(processo => {
-        adicionarAoGantt(processo.nome, processo.tempoExecucao, tempoAtual);
-        tempoAtual += processo.tempoExecucao + 1;
-    });
-}
-
-function adicionarAoGantt(nome, duracao, inicio) {
-    setTimeout(() => {
-        const barra = document.createElement("div");
-        barra.className = "barra-processo";
-        barra.style.width = `${duracao * 50}px`;
-        barra.textContent = nome;
-        document.getElementById("graficoGantt").appendChild(barra);
-    }, inicio * 1000);
-}
