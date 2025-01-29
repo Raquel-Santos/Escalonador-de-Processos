@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escalonador de Processos</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Escolher Algoritmo</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body id="pagina-index">
-    <h1>Escalonador de Processos</h1>
-    <form id="formQuantidade">
-        <label for="quantidadeProcessos">Número de Processos:</label>
-        <input type="number" id="quantidadeProcessos" min="1" required>
+<body id="pagina-inicial">
+    <h1>Escolha o Algoritmo e Quantidade de Processos</h1>
+    <form id="formInicial">
+        <label for="quantidade">Quantidade de Processos:</label>
+        <input type="number" id="quantidade" min="1" required>
+
+        <label for="algoritmo">Escolha o Algoritmo:</label>
+        <select id="algoritmo">
+            <option value="FIFO">FIFO</option>
+            <option value="SJF">SJF</option>
+            <option value="RR">Round Robin</option>
+            <option value="EDF">EDF</option>
+        </select>
+        
         <button type="submit">Avançar</button>
     </form>
     <script src="script.js"></script>
