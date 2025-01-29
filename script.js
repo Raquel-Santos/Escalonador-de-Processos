@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <h3>Processo ${i + 1}</h3>
                 <label>Tempo de Execução:</label>
                 <input type="number" name="tempoExecucao[]" min="1" required>
+                <label>Prazo (Deadline):</label>
+                <input type="number" name="deadline[]" min="1" required>
                 <label>Tempo de Espera:</label>
                 <input type="number" name="tempoEspera[]" min="0" required>
             `;
@@ -28,9 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
 
             const execucao = [...document.querySelectorAll('input[name="tempoExecucao[]"]')].map(input => input.value);
+            const deadline = [...document.querySelectorAll('input[name="deadline[]"]')].map(input => input.value);
             const espera = [...document.querySelectorAll('input[name="tempoEspera[]"]')].map(input => input.value);
 
             sessionStorage.setItem("execucao", JSON.stringify(execucao));
+            sessionStorage.setItem("deadline", JSON.stringify(deadline));
             sessionStorage.setItem("espera", JSON.stringify(espera));
 
             window.location.href = "gantt.html";
@@ -43,9 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (pagina === "pagina-gantt") {
         const execucao = JSON.parse(sessionStorage.getItem("execucao")) || [];
+        const deadline = JSON.parse(sessionStorage.getItem("deadline")) || [];
         const espera = JSON.parse(sessionStorage.getItem("espera")) || [];
 
-        if (execucao.length === 0 || espera.length === 0) {
+        if (execucao.length === 0 || deadline.length === 0 || espera.length === 0) {
             alert("Dados dos processos não encontrados. Retornando à página inicial.");
             window.location.href = "index.html";
             return;
@@ -54,10 +59,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const filaDeProcessos = execucao.map((tempoExecucao, i) => ({
             nome: `P${i + 1}`,
             tempoExecucao: parseInt(tempoExecucao, 10),
+            deadline: parseInt(deadline[i], 10),
             tempoEspera: parseInt(espera[i], 10),
             tempoInicio: null,
             tempoFim: null,
         }));
+
+        // Ordenar processos pelo deadline
+        filaDeProcessos.sort((a, b) => a.deadline - b.deadline);
 
         let tempoAtual = 0;
         const graficoGantt = document.getElementById("graficoGantt");
@@ -85,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
             linha.innerHTML = `
                 <td>${processo.nome}</td>
                 <td>${processo.tempoExecucao}</td>
+                <td>${processo.deadline}</td>
                 <td>${processo.tempoEspera}</td>
                 <td>${processo.turnaround}</td>
             `;
